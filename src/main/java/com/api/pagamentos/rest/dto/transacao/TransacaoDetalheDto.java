@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Data
 public class TransacaoDetalheDto {
-    private Long id;
+    private String id;
     private String cartao;
     private DescricaoDetalheDto descricao;
     private FormaPagamentoDto formaPagamento;

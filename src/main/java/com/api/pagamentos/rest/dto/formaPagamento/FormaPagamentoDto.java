@@ -11,6 +11,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FormaPagamentoDto {
-    private Integer parcelas;
+    private String parcelas;
     private TipoPagamento tipo;
 }

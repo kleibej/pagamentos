@@ -19,7 +19,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class Descricao {
     @Id
-    @Column(name = "id")
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
     private Long nsu;
     private BigDecimal valor;
     private LocalDateTime dataHora;

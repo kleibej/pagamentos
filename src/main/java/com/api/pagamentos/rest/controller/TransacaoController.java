@@ -7,13 +7,13 @@ import com.api.pagamentos.rest.TransacaoWrapper;
 import com.api.pagamentos.rest.dto.transacao.ConsultaTransacaoDto;
 import com.api.pagamentos.rest.dto.transacao.CriarTransacaoDto;
 import com.api.pagamentos.rest.dto.transacao.TransacaoDetalheDto;
+import com.api.pagamentos.utils.RespostaUtils;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/transacoes")
@@ -27,35 +27,39 @@ public class TransacaoController {
     }
 
     @PostMapping
-    public ResponseEntity<TransacaoDetalheDto> pagar(@RequestBody TransacaoWrapper wrapper) {
-        //fixme avaliar se precisa de tanta transformacao
+    public ResponseEntity<Map<String, TransacaoDetalheDto>> pagar(@RequestBody TransacaoWrapper wrapper) {
         CriarTransacaoDto transacaoDto = modelMapperService.toObject(CriarTransacaoDto.class, wrapper.getTransacao());
         Transacao pagamento = this.transacaoService.pagamento(modelMapperService.toObject(Transacao.class, transacaoDto));
-        return ResponseEntity.ok(modelMapperService.toObject(TransacaoDetalheDto.class, pagamento));
+        return ResponseEntity.ok(RespostaUtils.padronizaRespostas(
+                "transacao",
+                modelMapperService.toObject(TransacaoDetalheDto.class, pagamento))
+        );
     }
 
     @GetMapping("/estorno/{id}")
     public ResponseEntity<Map<String, TransacaoDetalheDto>> estornar(@PathVariable Long id) {
-        Map<String, TransacaoDetalheDto> respostaPadrao = new HashMap<>();
-        respostaPadrao.put("transacao", modelMapperService.toObject(TransacaoDetalheDto.class, this.transacaoService.estorno(id)));
-        return ResponseEntity.ok(respostaPadrao);
+        return ResponseEntity.ok(RespostaUtils.padronizaRespostas(
+                "transacao",
+                modelMapperService.toObject(TransacaoDetalheDto.class, this.transacaoService.estorno(id)))
+        );
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<Map<String, ConsultaTransacaoDto>> consultarPorId(@PathVariable Long id){
-        Map<String, ConsultaTransacaoDto> retornoPadrao = new HashMap<>();
-        retornoPadrao.put("transacao", modelMapperService.toObject(ConsultaTransacaoDto.class, this.transacaoService.consultaPorId(id)));
-        return ResponseEntity.ok(retornoPadrao);
+        return ResponseEntity.ok(RespostaUtils.padronizaRespostas(
+                "transacao",
+                modelMapperService.toObject(ConsultaTransacaoDto.class, this.transacaoService.consultaPorId(id)))
+        );
     }
 
     @GetMapping
-    public ResponseEntity<List<Map<String, ConsultaTransacaoDto>>> listarTransacoes(){
-        List<Map<String, ConsultaTransacaoDto>> retornoPadrao = new ArrayList<>();
-        modelMapperService.toList(ConsultaTransacaoDto.class, this.transacaoService.listarTransacoes()).forEach(t -> {
-            Map<String, ConsultaTransacaoDto> atributoTransacao = new HashMap<>();
-            atributoTransacao.put("transacao", t);
-            retornoPadrao.add(atributoTransacao);
-        });
+    public ResponseEntity<List<Map<String, ConsultaTransacaoDto>>> listarTransacoes() {
+        List<ConsultaTransacaoDto> transacoes = modelMapperService.toList(ConsultaTransacaoDto.class, this.transacaoService.listarTransacoes());
+
+        List<Map<String, ConsultaTransacaoDto>> retornoPadrao = transacoes.stream()
+                .map(transacao -> RespostaUtils.padronizaRespostas("transacao", transacao))
+                .collect(Collectors.toList());
+
         return ResponseEntity.ok(retornoPadrao);
     }
 

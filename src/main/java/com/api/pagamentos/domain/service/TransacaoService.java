@@ -1,6 +1,5 @@
 package com.api.pagamentos.domain.service;
 
-import com.api.pagamentos.domain.entity.Descricao;
 import com.api.pagamentos.domain.entity.Transacao;
 import com.api.pagamentos.domain.enums.StatusTransacao;
 import com.api.pagamentos.domain.repository.TransacaoRepository;

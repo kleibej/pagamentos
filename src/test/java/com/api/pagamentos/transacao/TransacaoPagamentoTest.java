@@ -35,8 +35,6 @@ import java.time.LocalDateTime;
 @DirtiesContext
 @SpringBootTest
 @AutoConfigureMockMvc
-
-//fixme teste com erro por setar o nsu manualmente e ele ser chave primária
 public class TransacaoPagamentoTest {
 
 
@@ -87,7 +85,7 @@ public class TransacaoPagamentoTest {
                         .formaPagamento(FormaPagamentoDto
                                 .builder()
                                 .tipo(TipoPagamento.AVISTA)
-                                .parcelas(1)
+                                .parcelas("1")
                                 .build())
                         .build())))
                 .contentType(MediaType.APPLICATION_JSON))
@@ -107,7 +105,7 @@ public class TransacaoPagamentoTest {
                                 .formaPagamento(FormaPagamentoDto
                                         .builder()
                                         .tipo(TipoPagamento.AVISTA)
-                                        .parcelas(1)
+                                        .parcelas("1")
                                         .build())
                                 .build())))
                         .contentType(MediaType.APPLICATION_JSON))
@@ -123,7 +121,7 @@ public class TransacaoPagamentoTest {
                                 .formaPagamento(FormaPagamentoDto
                                         .builder()
                                         .tipo(TipoPagamento.AVISTA)
-                                        .parcelas(1)
+                                        .parcelas("1")
                                         .build())
                                 .build())))
                         .contentType(MediaType.APPLICATION_JSON))
@@ -159,7 +157,7 @@ public class TransacaoPagamentoTest {
                                 .formaPagamento(FormaPagamentoDto
                                         .builder()
                                         .tipo(TipoPagamento.AVISTA)
-                                        .parcelas(1)
+                                        .parcelas("1")
                                         .build())
                                 .build())))
                         .contentType(MediaType.APPLICATION_JSON))
